@@ -2,6 +2,7 @@
 pytest
 pytest-django
 pytest-cov
+psycopg2
 
 # fixtures
 model_mommy

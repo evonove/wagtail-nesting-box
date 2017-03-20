@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils.translation import ugettext as _
 
@@ -18,6 +19,8 @@ from ..fields import BodyStreamBlock
 
 
 class Blog(Page):
+    linked_data = JSONField(blank=True, null=True, help_text=_('Linked data field in JSON'))
+
     @property
     def articles(self):
         """
@@ -70,6 +73,15 @@ class Blog(Page):
         context['current_tag'] = tag
         return context
 
+    promote_panels = Page.promote_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel('linked_data'),
+            ],
+            heading='Linked Data in JSON',
+        ),
+    ]
+
 
 @register_setting
 class BlogSettings(BaseSetting):
@@ -108,6 +120,7 @@ class Post(Page):
     intro = models.TextField(max_length=600)
     tags = ClusterTaggableManager(through=PostTag, blank=True)
     date = models.DateField(_('Post date'))
+    linked_data = JSONField(blank=True, null=True, help_text=_('Linked data field in JSON'))
 
     search_fields = Page.search_fields + [
         index.SearchField('body'),
@@ -119,4 +132,13 @@ class Post(Page):
         FieldPanel('tags'),
         StreamFieldPanel('body'),
         FieldPanel('date'),
+    ]
+
+    promote_panels = Page.promote_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel('linked_data'),
+            ],
+            heading='Linked Data in JSON'
+        ),
     ]
