@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils.translation import ugettext as _
 
@@ -19,7 +18,7 @@ from ..fields import BodyStreamBlock
 
 
 class Blog(Page):
-    linked_data = JSONField(blank=True, null=True, help_text=_('Linked data field in JSON'))
+    linked_data = models.JSONField(blank=True, null=True, help_text=_('Linked data field in JSON'))
 
     @property
     def articles(self):
@@ -120,7 +119,7 @@ class Post(Page):
     intro = models.TextField(max_length=600)
     tags = ClusterTaggableManager(through=PostTag, blank=True)
     date = models.DateField(_('Post date'))
-    linked_data = JSONField(blank=True, null=True, help_text=_('Linked data field in JSON'))
+    linked_data = models.JSONField(blank=True, null=True, help_text=_('Linked data field in JSON'))
 
     search_fields = Page.search_fields + [
         index.SearchField('body'),
